@@ -10,7 +10,7 @@ export interface Element extends HTMLDivElement {
   /**
    * Alert message.
    */
-  message: string;
+  message: JSX.Element;
   /**
    * Determines whether the alert is hidden or not.
    */

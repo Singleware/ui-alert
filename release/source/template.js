@@ -103,6 +103,14 @@ let Template = class Template extends Control.Component {
         this.assignProperties();
     }
     /**
+     * Updates the current message into the active message element.
+     */
+    updateMessage() {
+        if (this.activeMessage) {
+            DOM.append(DOM.clear(this.activeMessage), this.states.message);
+        }
+    }
+    /**
      * Hide button, click handler.
      */
     hideHandler() {
@@ -141,6 +149,7 @@ let Template = class Template extends Control.Component {
      */
     set message(message) {
         this.states.message = message;
+        this.updateMessage();
     }
     /**
      * Gets the hidden status.
@@ -159,11 +168,8 @@ let Template = class Template extends Control.Component {
      */
     show() {
         DOM.append(this.shadow, this.wrapper);
-        const element = this.messageSlot.assignedNodes({ flatten: true })[0];
-        if (!element) {
-            throw new Error(`There is no message element assigned.`);
-        }
-        DOM.append(DOM.clear(element), this.states.message);
+        this.activeMessage = this.messageSlot.assignedNodes({ flatten: true })[0];
+        this.updateMessage();
         this.skeleton.dataset.open = 'on';
     }
     /**
@@ -171,9 +177,13 @@ let Template = class Template extends Control.Component {
      */
     hide() {
         this.wrapper.remove();
+        this.activeMessage = void 0;
         delete this.skeleton.dataset.open;
     }
 };
+__decorate([
+    Class.Private()
+], Template.prototype, "activeMessage", void 0);
 __decorate([
     Class.Private()
 ], Template.prototype, "states", void 0);
@@ -198,6 +208,9 @@ __decorate([
 __decorate([
     Class.Private()
 ], Template.prototype, "shadow", void 0);
+__decorate([
+    Class.Private()
+], Template.prototype, "updateMessage", null);
 __decorate([
     Class.Private()
 ], Template.prototype, "hideHandler", null);

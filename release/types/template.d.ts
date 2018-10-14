@@ -6,6 +6,10 @@ import { Element } from './element';
  */
 export declare class Template extends Control.Component<Properties> {
     /**
+     * Current active message element.
+     */
+    private activeMessage?;
+    /**
      * Alert states.
      */
     private states;
@@ -37,6 +41,10 @@ export declare class Template extends Control.Component<Properties> {
      * Element shadow.
      */
     private shadow;
+    /**
+     * Updates the current message into the active message element.
+     */
+    private updateMessage;
     /**
      * Hide button, click handler.
      */

@@ -16,6 +16,12 @@ import { States } from './states';
 @Class.Describe()
 export class Template extends Control.Component<Properties> {
   /**
+   * Current active message element.
+   */
+  @Class.Private()
+  private activeMessage?: HTMLElement;
+
+  /**
    * Alert states.
    */
   @Class.Private()
@@ -120,6 +126,16 @@ export class Template extends Control.Component<Properties> {
   private shadow = DOM.append(this.skeleton.attachShadow({ mode: 'closed' }), this.styles);
 
   /**
+   * Updates the current message into the active message element.
+   */
+  @Class.Private()
+  private updateMessage(): void {
+    if (this.activeMessage) {
+      DOM.append(DOM.clear(this.activeMessage), this.states.message);
+    }
+  }
+
+  /**
    * Hide button, click handler.
    */
   @Class.Private()
@@ -180,6 +196,7 @@ export class Template extends Control.Component<Properties> {
    */
   public set message(message: JSX.Element) {
     this.states.message = message;
+    this.updateMessage();
   }
 
   /**
@@ -204,11 +221,8 @@ export class Template extends Control.Component<Properties> {
   @Class.Public()
   public show(): void {
     DOM.append(this.shadow, this.wrapper);
-    const element = this.messageSlot.assignedNodes({ flatten: true })[0] as HTMLElement;
-    if (!element) {
-      throw new Error(`There is no message element assigned.`);
-    }
-    DOM.append(DOM.clear(element), this.states.message);
+    this.activeMessage = this.messageSlot.assignedNodes({ flatten: true })[0] as HTMLElement;
+    this.updateMessage();
     this.skeleton.dataset.open = 'on';
   }
 
@@ -218,6 +232,7 @@ export class Template extends Control.Component<Properties> {
   @Class.Public()
   public hide(): void {
     this.wrapper.remove();
+    this.activeMessage = void 0;
     delete this.skeleton.dataset.open;
   }
 }
