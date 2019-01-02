@@ -5,12 +5,21 @@
  * The proposal of this example is to show how to use the basic alert template.
  */
 import * as Alert from '../source';
-import * as DOM from '@singleware/jsx';
+import * as JSX from '@singleware/jsx';
 
 const alert = (
-  <Alert.Template>
+  <Alert.Component>
     <div slot="icon" />
     <div slot="close" />
     <div slot="message">This is an alert example</div>
-  </Alert.Template>
+  </Alert.Component>
 ) as Alert.Element;
+
+// Shows the alert.
+alert.show();
+
+// Changes the alert message.
+alert.message = 'This is a new message';
+
+// Hides the alert.
+alert.hide();

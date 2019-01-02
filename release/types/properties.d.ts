@@ -20,11 +20,15 @@ export interface Properties {
    */
   message?: string;
   /**
-   * Determines whether the alert starts hidden.
+   * Determines whether the alert starts opened or not.
    */
-  hidden?: boolean;
+  opened?: boolean;
   /**
    * Alert children.
    */
   children?: {};
+  /**
+   * Hide event.
+   */
+  onHide?: (event: Event) => void;
 }

@@ -1,26 +1,61 @@
+import * as Control from '@singleware/ui-control';
 /**
- * Copyright (C) 2018 Silas B. Domingos
- * This source code is licensed under the MIT License as described in the file LICENSE.
+ * Alert element.
  */
-
-/**
- * Alert element interface.
- */
-export interface Element extends HTMLDivElement {
-  /**
-   * Alert message.
-   */
-  message: JSX.Element;
-  /**
-   * Determines whether the alert is hidden or not.
-   */
-  readonly hidden: boolean;
-  /**
-   * Show the alert.
-   */
-  show(): void;
-  /**
-   * Hides the alert.
-   */
-  hide(): void;
+export declare class Element extends Control.Element {
+    /**
+     * Element styles.
+     */
+    private styles;
+    /**
+     * Current message content.
+     */
+    private currentMessage;
+    /**
+     * Icon slot.
+     */
+    private iconSlot;
+    /**
+     * Message slot.
+     */
+    private messageSlot;
+    /**
+     * Hide slot.
+     */
+    private hideSlot;
+    /**
+     * Alert layout.
+     */
+    private alertLayout;
+    /**
+     * Alert styles.
+     */
+    private alertStyles;
+    /**
+     * Hide button, click handler.
+     */
+    private hideHandler;
+    /**
+     * Default constructor.
+     */
+    constructor();
+    /**
+     * Gets the alert message.
+     */
+    /**
+    * Sets the alert message.
+    */
+    message: any;
+    /**
+     * Gets the opened status.
+     */
+    readonly opened: boolean;
+    /**
+     * Shows the alert.
+     */
+    show(): void;
+    /**
+     * Hides the alert.
+     */
+    hide(): void;
 }
