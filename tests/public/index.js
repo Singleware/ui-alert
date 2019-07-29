@@ -2989,6 +2989,1002 @@ Navigator = __decorate([
 exports.Navigator = Navigator;
 
 }},
+"@singleware/ui-control/component":{pack:false, invoke:function(exports, require){
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Copyright (C) 2018 Silas B. Domingos
+ * This source code is licensed under the MIT License as described in the file LICENSE.
+ */
+const Class = require("@singleware/class");
+/**
+ * Component class.
+ */
+let Component = class Component extends Class.Null {
+    /**
+     * Default constructor.
+     * @param properties Initial properties.
+     * @param children Initial children.
+     */
+    constructor(properties, children) {
+        super();
+        this.properties = Object.freeze(properties || {});
+        this.children = Object.freeze(children || []);
+    }
+    /**
+     * Gets the property descriptor that corresponds to the specified property name and prototype source.
+     * @param prototype Prototype source.
+     * @param property Property name.
+     * @returns Returns the corresponding property descriptor or undefined when the property was not found.
+     */
+    getPropertyDescriptor(prototype, property) {
+        let descriptor;
+        while (!(descriptor = Object.getOwnPropertyDescriptor(prototype, property))) {
+            if (!(prototype = Reflect.getPrototypeOf(prototype))) {
+                break;
+            }
+        }
+        return descriptor;
+    }
+    /**
+     * Binds the property descriptor from the specified prototype to be called with this instance context.
+     * @param prototype Source prototype.
+     * @param property Property name.
+     * @returns Returns a new property descriptor.
+     * @throws Throws an error when the specified property was not found.
+     */
+    bindDescriptor(prototype, property) {
+        const descriptor = this.getPropertyDescriptor(prototype, property);
+        if (!descriptor) {
+            throw new Error(`Property '${property}' was not found.`);
+        }
+        const newer = { ...descriptor };
+        if (newer.value) {
+            newer.value = newer.value.bind(this);
+        }
+        else {
+            if (newer.get) {
+                newer.get = newer.get.bind(this);
+            }
+            if (newer.set) {
+                newer.set = newer.set.bind(this);
+            }
+        }
+        return newer;
+    }
+    /**
+     * Bind all specified properties from this instance into the target object.
+     * @param target Target object.
+     * @param properties Properties to be assigned.
+     */
+    bindComponentProperties(target, properties) {
+        const prototype = Reflect.getPrototypeOf(this);
+        for (const property of properties) {
+            Reflect.defineProperty(target, property, this.bindDescriptor(prototype, property));
+        }
+    }
+    /**
+     * Assign all mapped values by the specified properties into this instance.
+     * @param values Values to be assigned.
+     * @param properties Properties to be assigned.
+     * @throws Throws an error when some specified property does not exists in this instance.
+     */
+    assignComponentProperties(values, properties) {
+        for (const property of properties) {
+            if (property in values) {
+                if (!(property in this)) {
+                    throw new Error(`Property '${property}' can't be assigned.`);
+                }
+                this[property] = values[property];
+            }
+        }
+    }
+    /**
+     * Gets the component instance.
+     * @throws Always throw an exception when not implemented.
+     */
+    get element() {
+        throw new Error(`Component not implemented.`);
+    }
+};
+__decorate([
+    Class.Protected()
+], Component.prototype, "properties", void 0);
+__decorate([
+    Class.Protected()
+], Component.prototype, "children", void 0);
+__decorate([
+    Class.Private()
+], Component.prototype, "getPropertyDescriptor", null);
+__decorate([
+    Class.Private()
+], Component.prototype, "bindDescriptor", null);
+__decorate([
+    Class.Protected()
+], Component.prototype, "bindComponentProperties", null);
+__decorate([
+    Class.Protected()
+], Component.prototype, "assignComponentProperties", null);
+__decorate([
+    Class.Public()
+], Component.prototype, "element", null);
+Component = __decorate([
+    Class.Describe()
+], Component);
+exports.Component = Component;
+
+}},
+"@singleware/ui-control/element":{pack:false, invoke:function(exports, require){
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Copyright (C) 2018 Silas B. Domingos
+ * This source code is licensed under the MIT License as described in the file LICENSE.
+ */
+const Class = require("@singleware/class");
+/**
+ * Element class.
+ */
+let Element = class Element extends HTMLElement {
+    /**
+     * Gets the first child element in the specified slot element.
+     * @param slot Slot element.
+     * @param required Determines whether the child is required or not.
+     * @throws Throws an error when there are no children in the specified slot and the child is required.
+     * @returns Returns the first child element or undefined when the child was not found.
+     */
+    getChildElement(slot, required) {
+        const child = slot.assignedNodes()[0];
+        if (!child && required) {
+            throw new Error(`There are no children in the '${slot.name}' slot.`);
+        }
+        return child;
+    }
+    /**
+     * Gets the first child element in the specified slot element.
+     * @param slot Slot element.
+     * @throws Throws an error when there are no children in the specified slo.
+     * @returns Returns the first child element.
+     */
+    getRequiredChildElement(slot) {
+        return this.getChildElement(slot, true);
+    }
+    /**
+     * Gets the specified property from the first child in the given slot element.
+     * @param slot Slot element.
+     * @param property Property name.
+     * @param required Determines whether the property is required or not.
+     * @throws Throws an error when there are no children in the specified slot and the property is required.
+     * @returns Returns the property value.
+     */
+    getChildProperty(slot, property, required) {
+        return this.getChildElement(slot, required)[property];
+    }
+    /**
+     * Gets the specified property from the first child in the given slot element.
+     * @param slot Slot element.
+     * @param property Property name.
+     * @throws Throws an error when there are no children in the specified slot.
+     * @returns Returns the property value.
+     */
+    getRequiredChildProperty(slot, property) {
+        return this.getChildProperty(slot, property, true);
+    }
+    /**
+     * Sets the specified property into the first child in the given slot element.
+     * @param slot Slot element.
+     * @param property Property name.
+     * @param value Property value.
+     * @param required Determines whether the child is required or not.
+     * @throws Throws an error when there are no children in the specified slot and the child is required.
+     * @returns Returns true when the specified property has been assigned, false otherwise.
+     */
+    setChildProperty(slot, property, value, required) {
+        const child = this.getChildElement(slot, required);
+        if (property in child) {
+            child[property] = value;
+            return true;
+        }
+        return false;
+    }
+    /**
+     * Sets the specified property into the first child in the given slot element.
+     * @param slot Slot element.
+     * @param property Property name.
+     * @param value Property value.
+     * @throws Throws an error when there are no children in the specified slot.
+     * @returns Returns true when the specified property has been assigned, false otherwise.
+     */
+    setRequiredChildProperty(slot, property, value) {
+        return this.setChildProperty(slot, property, value, true);
+    }
+    /**
+     * Calls the specified method from the first child in the given slot element.
+     * @param slot Slot element.
+     * @param method Method name.
+     * @param parameters Method parameters.
+     * @param required Determines whether the child is required or not.
+     * @throws Throws an error when there are no children in the specified slot and the child is required.
+     * @returns Returns the same value from the performed method.
+     */
+    callChildMethod(slot, method, parameters, required) {
+        const child = this.getChildElement(slot, required);
+        if (child[method] instanceof Function) {
+            return child[method](...parameters);
+        }
+        return void 0;
+    }
+    /**
+     * Calls the specified method from the first child in the given slot element.
+     * @param slot Slot element.
+     * @param method Method name.
+     * @param parameters Method parameters.
+     * @throws Throws an error when there are no children in the specified slot.
+     * @returns Returns the same value from the performed method.
+     */
+    callRequiredChildMethod(slot, method, parameters) {
+        return this.callChildMethod(slot, method, parameters, true);
+    }
+    /**
+     * Updates the specified property name with the given value in the element.
+     * @param property Property name.
+     * @param value Property value.
+     */
+    updatePropertyState(property, value) {
+        if (value) {
+            this.setAttribute(property, value === true ? '' : value);
+        }
+        else {
+            this.removeAttribute(property);
+        }
+    }
+    /**
+     * Update all element's children width the specified property name and value.
+     * @param property Property name.
+     * @param value Property value.
+     */
+    updateChildrenState(property, value) {
+        for (const child of this.children) {
+            if (property in child) {
+                child[property] = value;
+            }
+        }
+    }
+};
+__decorate([
+    Class.Protected()
+], Element.prototype, "getChildElement", null);
+__decorate([
+    Class.Protected()
+], Element.prototype, "getRequiredChildElement", null);
+__decorate([
+    Class.Protected()
+], Element.prototype, "getChildProperty", null);
+__decorate([
+    Class.Protected()
+], Element.prototype, "getRequiredChildProperty", null);
+__decorate([
+    Class.Protected()
+], Element.prototype, "setChildProperty", null);
+__decorate([
+    Class.Protected()
+], Element.prototype, "setRequiredChildProperty", null);
+__decorate([
+    Class.Protected()
+], Element.prototype, "callChildMethod", null);
+__decorate([
+    Class.Protected()
+], Element.prototype, "callRequiredChildMethod", null);
+__decorate([
+    Class.Protected()
+], Element.prototype, "updatePropertyState", null);
+__decorate([
+    Class.Protected()
+], Element.prototype, "updateChildrenState", null);
+Element = __decorate([
+    Class.Describe()
+], Element);
+exports.Element = Element;
+
+}},
+"@singleware/ui-control/helper":{pack:false, invoke:function(exports, require){
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Copyright (C) 2018 Silas B. Domingos
+ * This source code is licensed under the MIT License as described in the file LICENSE.
+ */
+const Class = require("@singleware/class");
+/**
+ * Control helper class.
+ */
+let Helper = class Helper extends Class.Null {
+    /**
+     * List all children of the expected type in the provided element slot and performs the given callback for each child.
+     * @param slot Element slot.
+     * @param type Expected instance type.
+     * @param callback Callback to be performed.
+     * @returns Returns the same value returned by the callback or undefined if the callback has no returns.
+     */
+    static listChildrenByType(slot, type, callback) {
+        const children = slot.assignedNodes();
+        for (const child of children) {
+            if (child instanceof type) {
+                const result = callback(child);
+                if (result !== void 0) {
+                    return result;
+                }
+            }
+        }
+        return void 0;
+    }
+    /**
+     * List all children that contains the expected property in the provided element slot and performs the given callback for each child.
+     * @param slot Element slot.
+     * @param property Expected property.
+     * @param callback Callback to be executed for each child.
+     * @returns Returns the same value returned by the callback or undefined if the callback has no returns.
+     */
+    static listChildrenByProperty(slot, property, callback) {
+        return this.listChildrenByType(slot, HTMLElement, (child) => {
+            if (property in child) {
+                const result = callback(child);
+                if (result !== void 0) {
+                    return result;
+                }
+            }
+        });
+    }
+    /**
+     * Gets the first child of the expected type from the specified element slot.
+     * @param slot Element slot.
+     * @param type Expected instance type.
+     * @returns Returns the first child or undefined when there is no child found.
+     */
+    static getChildByType(slot, type) {
+        return this.listChildrenByType(slot, type, (child) => child);
+    }
+    /**
+     * Gets the first child that contains the expected property from the specified element slot.
+     * @param slot Element slot.
+     * @param property Expected property.
+     * @returns Returns the first child or undefined when there is no child found.
+     */
+    static getChildByProperty(slot, property) {
+        return this.listChildrenByProperty(slot, property, (child) => child);
+    }
+    /**
+     * Gets the property value from the first child that contains the expected property in the specified element slot.
+     * @param slot Element slot.
+     * @param property Expected property.
+     * @returns Returns the property value or undefined when there is no child found.
+     */
+    static getChildProperty(slot, property) {
+        const child = this.getChildByProperty(slot, property);
+        return child ? child[property] : void 0;
+    }
+    /**
+     * Sets the specified property value to all elements in the specified element slot.
+     * @param slot Element slot.
+     * @param property Expected property.
+     * @param value New property value.
+     */
+    static setChildrenProperty(slot, property, value) {
+        this.listChildrenByProperty(slot, property, (child) => {
+            child[property] = value;
+        });
+    }
+    /**
+     * Sets the property value into the first child that contains the expected property in the specified element slot.
+     * @param slot Element slot.
+     * @param property Expected property.
+     * @param value New property value.
+     * @returns Returns true when the child was found and updated, false otherwise.
+     */
+    static setChildProperty(slot, property, value) {
+        const child = this.getChildByProperty(slot, property);
+        if (child) {
+            child[property] = value;
+            return true;
+        }
+        return false;
+    }
+};
+__decorate([
+    Class.Public()
+], Helper, "listChildrenByType", null);
+__decorate([
+    Class.Public()
+], Helper, "listChildrenByProperty", null);
+__decorate([
+    Class.Public()
+], Helper, "getChildByType", null);
+__decorate([
+    Class.Public()
+], Helper, "getChildByProperty", null);
+__decorate([
+    Class.Public()
+], Helper, "getChildProperty", null);
+__decorate([
+    Class.Public()
+], Helper, "setChildrenProperty", null);
+__decorate([
+    Class.Public()
+], Helper, "setChildProperty", null);
+Helper = __decorate([
+    Class.Describe()
+], Helper);
+exports.Helper = Helper;
+
+}},
+"@singleware/ui-control/index":{pack:false, invoke:function(exports, require){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Copyright (C) 2018 Silas B. Domingos
+ * This source code is licensed under the MIT License as described in the file LICENSE.
+ */
+var element_1 = require("./element");
+exports.Element = element_1.Element;
+var component_1 = require("./component");
+exports.Component = component_1.Component;
+const helper_1 = require("./helper");
+/**
+ * List all children of the expected type in the provided element slot and performs the given callback for each child.
+ * @param slot Element slot.
+ * @param type Expected instance type.
+ * @param callback Callback to be performed.
+ * @returns Returns the same value returned by the callback or undefined if the callback has no returns.
+ */
+exports.listChildrenByType = (slot, type, callback) => helper_1.Helper.listChildrenByType(slot, type, callback);
+/**
+ * List all children that contains the expected property in the provided element slot and performs the given callback for each child.
+ * @param slot Element slot.
+ * @param property Expected property.
+ * @param callback Callback to be executed for each child.
+ * @returns Returns the same value returned by the callback or undefined if the callback has no returns.
+ */
+exports.listChildrenByProperty = (slot, property, callback) => helper_1.Helper.listChildrenByProperty(slot, property, callback);
+/**
+ * Gets the first child of the expected type from the specified element slot.
+ * @param slot Element slot.
+ * @param type Expected instance type.
+ * @returns Returns the first child or undefined when there is no child found.
+ */
+exports.getChildByType = (slot, type) => helper_1.Helper.getChildByType(slot, type);
+/**
+ * Gets the first child that contains the expected property from the specified element slot.
+ * @param slot Element slot.
+ * @param property Expected property.
+ * @returns Returns the first child or undefined when there is no child found.
+ */
+exports.getChildByProperty = (slot, property) => helper_1.Helper.getChildByProperty(slot, property);
+/**
+ * Gets the property value from the first child that contains the expected property in the specified element slot.
+ * @param slot Element slot.
+ * @param property Expected property.
+ * @returns Returns the property value or undefined when there is no child found.
+ */
+exports.getChildProperty = (slot, property) => helper_1.Helper.getChildProperty(slot, property);
+/**
+ * Sets the specified property value to all elements in the specified element slot.
+ * @param slot Element slot.
+ * @param property Expected property.
+ * @param value New property value.
+ */
+exports.setChildrenProperty = (slot, property, value) => helper_1.Helper.setChildrenProperty(slot, property, value);
+/**
+ * Sets the property value into the first child that contains the expected property in the specified element slot.
+ * @param slot Element slot.
+ * @param property Expected property.
+ * @param value New property value.
+ * @returns Returns true when the child was found and updated, false otherwise.
+ */
+exports.setChildProperty = (slot, property, value) => helper_1.Helper.setChildProperty(slot, property, value);
+
+}},
+"@singleware/ui-control":{pack:true, invoke:function(exports, require){
+Object.assign(exports, require('index'));
+}},
+"@singleware/ui-switch/index":{pack:false, invoke:function(exports, require){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Copyright (C) 2018 Silas B. Domingos
+ * This source code is licensed under the MIT License as described in the file LICENSE.
+ */
+var template_1 = require("./template");
+exports.Template = template_1.Template;
+
+}},
+"@singleware/ui-switch":{pack:true, invoke:function(exports, require){
+Object.assign(exports, require('index'));
+}},
+"@singleware/ui-switch/template":{pack:false, invoke:function(exports, require){
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var Template_1;
+"use strict";
+/**
+ * Copyright (C) 2018 Silas B. Domingos
+ * This source code is licensed under the MIT License as described in the file LICENSE.
+ */
+const Class = require("@singleware/class");
+const DOM = require("@singleware/jsx");
+const Control = require("@singleware/ui-control");
+/**
+ * Switch template class.
+ */
+let Template = Template_1 = class Template extends Control.Component {
+    /**
+     * Default constructor.
+     * @param properties Select properties.
+     * @param children Select children.
+     */
+    constructor(properties, children) {
+        super(properties, children);
+        /**
+         * Switch states.
+         */
+        this.states = {
+            name: '',
+            checkedValue: 'on',
+            uncheckedValue: 'off'
+        };
+        /**
+         * Input element.
+         */
+        this.input = DOM.create("input", { type: "checkbox" });
+        /**
+         * Yes mark element.
+         */
+        this.yesMarkSlot = DOM.create("slot", { name: "yes", class: "mark yes" });
+        /**
+         * No mark element.
+         */
+        this.noMarkSlot = DOM.create("slot", { name: "no", class: "mark no" });
+        /**
+         * Switch slider element.
+         */
+        this.slider = (DOM.create("div", { class: "slider" },
+            this.yesMarkSlot,
+            this.noMarkSlot));
+        /**
+         * Switch element.
+         */
+        this.switch = (DOM.create("label", { class: "switch" },
+            this.input,
+            this.slider));
+        /**
+         * Switch styles.
+         */
+        this.styles = (DOM.create("style", null, `:host > .switch > input {
+  position: absolute;
+  opacity: 0;
+}
+:host > .switch > input:not([disabled]):not([readonly]) ~ .slider {
+  cursor: pointer;
+}
+:host > .switch > .slider {
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+}
+:host > .switch > .slider > .mark {
+  position: relative;
+  display: inline-block;
+  min-width: 1em;
+  width: 100%;
+}
+:host > .switch > .slider > .yes {
+  text-align: left;
+  margin-left: -100%;
+}
+:host > .switch > .slider > .no {
+  text-align: right;
+}
+:host > .switch > .slider > .no::slotted(*) {
+  padding-right: 1rem;
+}
+:host > .switch > .slider > .no::slotted(*):before {
+  content: '';
+  position: absolute;
+  display: inline-block;
+  width: 1.25em;
+  bottom: 0.25rem;
+  top: 0.25rem;
+  left: 0.25rem;
+  border: 0.0625rem solid black;
+  border-radius: 50%;
+}
+:host > .switch > input:checked ~ .slider > .yes {
+  margin-left: 0;
+}
+:host > .switch > input:checked ~ .slider > .yes::slotted(*) {
+  padding-left: 1rem;
+}
+:host > .switch > input:checked ~ .slider > .no::slotted(*):before {
+  left: auto;
+  right: 100%;
+  margin-right: 0.25rem;
+}`));
+        /**
+         * Switch skeleton.
+         */
+        this.skeleton = (DOM.create("div", { slot: this.properties.slot, class: this.properties.class }, this.children));
+        DOM.append(this.skeleton.attachShadow({ mode: 'closed' }), this.styles, this.switch);
+        this.bindHandlers();
+        this.bindProperties();
+        this.assignProperties();
+    }
+    /**
+     * Updates the specified property state.
+     * @param property Property name.
+     * @param state Property state.
+     */
+    updatePropertyState(property, state) {
+        if (state) {
+            this.skeleton.dataset[property] = 'on';
+        }
+        else {
+            delete this.skeleton.dataset[property];
+        }
+    }
+    /**
+     * Click event handler.
+     * @param event Event information.
+     */
+    clickHandler(event) {
+        if (this.input.readOnly) {
+            event.preventDefault();
+        }
+        else if (this.group) {
+            const last = Template_1.groups[this.group];
+            if (last !== this.skeleton) {
+                if (last) {
+                    last.checked = false;
+                    Template_1.notifyChanges(last);
+                }
+                this.updatePropertyState('checked', (this.input.checked = true));
+                Template_1.groups[this.group] = this.skeleton;
+                Template_1.notifyChanges(this.skeleton);
+            }
+        }
+        else {
+            this.updatePropertyState('checked', this.input.checked);
+            Template_1.notifyChanges(this.skeleton);
+        }
+    }
+    /**
+     * Bind event handlers to update the custom element.
+     */
+    bindHandlers() {
+        this.input.addEventListener('click', this.clickHandler.bind(this));
+    }
+    /**
+     * Bind exposed properties to the custom element.
+     */
+    bindProperties() {
+        this.bindComponentProperties(this.skeleton, [
+            'name',
+            'group',
+            'value',
+            'checked',
+            'defaultValue',
+            'defaultChecked',
+            'required',
+            'readOnly',
+            'disabled',
+            'checkedValue',
+            'uncheckedValue',
+            'reset'
+        ]);
+    }
+    /**
+     * Assign all element properties.
+     */
+    assignProperties() {
+        this.assignComponentProperties(this.properties, [
+            'name',
+            'group',
+            'checkedValue',
+            'uncheckedValue',
+            'value',
+            'checked',
+            'defaultValue',
+            'defaultChecked',
+            'required',
+            'readOnly',
+            'disabled'
+        ]);
+    }
+    /**
+     * Get switch name.
+     */
+    get name() {
+        return this.states.name;
+    }
+    /**
+     * Set switch name.
+     */
+    set name(name) {
+        this.states.name = name;
+    }
+    /**
+     * Get switch group.
+     */
+    get group() {
+        return this.input.name;
+    }
+    /**
+     * Set switch group.
+     */
+    set group(name) {
+        this.input.name = name;
+    }
+    /**
+     * Get switch value.
+     */
+    get value() {
+        return this.checked ? this.states.checkedValue : this.states.uncheckedValue;
+    }
+    /**
+     * Set switch value.
+     */
+    set value(value) {
+        this.checked = this.states.checkedValue === value;
+    }
+    /**
+     * Get checked state.
+     */
+    get checked() {
+        return this.input.checked;
+    }
+    /**
+     * Set checked state.
+     */
+    set checked(state) {
+        if (this.group) {
+            const last = Template_1.groups[this.group];
+            if (state) {
+                if (last && last !== this.skeleton) {
+                    last.checked = false;
+                }
+                Template_1.groups[this.group] = this.skeleton;
+            }
+            else if (last === this.skeleton) {
+                Template_1.groups[this.group] = void 0;
+            }
+        }
+        this.updatePropertyState('checked', (this.input.checked = state));
+    }
+    /**
+     * Gets the default switch value.
+     */
+    get defaultValue() {
+        return this.input.defaultValue;
+    }
+    /**
+     * Sets the default switch value.
+     */
+    set defaultValue(value) {
+        this.input.defaultValue = value;
+    }
+    /**
+     * Gets the default checked state.
+     */
+    get defaultChecked() {
+        return this.input.defaultChecked;
+    }
+    /**
+     * Sets the default checked state.
+     */
+    set defaultChecked(value) {
+        this.input.defaultChecked = value;
+    }
+    /**
+     * Get required state.
+     */
+    get required() {
+        return this.input.required;
+    }
+    /**
+     * Set required state.
+     */
+    set required(state) {
+        this.input.required = state;
+        this.updatePropertyState('required', state);
+    }
+    /**
+     * Get read-only state.
+     */
+    get readOnly() {
+        return this.input.readOnly;
+    }
+    /**
+     * Set read-only state.
+     */
+    set readOnly(state) {
+        this.input.readOnly = state;
+        this.updatePropertyState('readonly', state);
+    }
+    /**
+     * Get disabled state.
+     */
+    get disabled() {
+        return this.input.disabled;
+    }
+    /**
+     * Set disabled state.
+     */
+    set disabled(state) {
+        this.input.disabled = state;
+        this.updatePropertyState('disabled', state);
+    }
+    /**
+     * Gets the checked state value.
+     */
+    get checkedValue() {
+        return this.states.checkedValue;
+    }
+    /**
+     * Sets the checked state value.
+     */
+    set checkedValue(value) {
+        this.states.checkedValue = value;
+    }
+    /**
+     * Gets the unchecked state value.
+     */
+    get uncheckedValue() {
+        return this.states.uncheckedValue;
+    }
+    /**
+     * Sets the unchecked state value.
+     */
+    set uncheckedValue(value) {
+        this.states.uncheckedValue = value;
+    }
+    /**
+     * Switch element.
+     */
+    get element() {
+        return this.skeleton;
+    }
+    /**
+     * Reset the switch to its initial value and state.
+     */
+    reset() {
+        this.value = this.defaultValue;
+        this.checked = this.defaultChecked;
+    }
+    /**
+     * Notify element changes.
+     */
+    static notifyChanges(element) {
+        if (document.body.contains(element)) {
+            element.dispatchEvent(new Event('change', { bubbles: true, cancelable: false }));
+        }
+    }
+};
+/**
+ * Switch groups.
+ */
+Template.groups = {};
+__decorate([
+    Class.Private()
+], Template.prototype, "states", void 0);
+__decorate([
+    Class.Private()
+], Template.prototype, "input", void 0);
+__decorate([
+    Class.Private()
+], Template.prototype, "yesMarkSlot", void 0);
+__decorate([
+    Class.Private()
+], Template.prototype, "noMarkSlot", void 0);
+__decorate([
+    Class.Private()
+], Template.prototype, "slider", void 0);
+__decorate([
+    Class.Private()
+], Template.prototype, "switch", void 0);
+__decorate([
+    Class.Private()
+], Template.prototype, "styles", void 0);
+__decorate([
+    Class.Private()
+], Template.prototype, "skeleton", void 0);
+__decorate([
+    Class.Private()
+], Template.prototype, "updatePropertyState", null);
+__decorate([
+    Class.Private()
+], Template.prototype, "clickHandler", null);
+__decorate([
+    Class.Private()
+], Template.prototype, "bindHandlers", null);
+__decorate([
+    Class.Private()
+], Template.prototype, "bindProperties", null);
+__decorate([
+    Class.Private()
+], Template.prototype, "assignProperties", null);
+__decorate([
+    Class.Public()
+], Template.prototype, "name", null);
+__decorate([
+    Class.Public()
+], Template.prototype, "group", null);
+__decorate([
+    Class.Public()
+], Template.prototype, "value", null);
+__decorate([
+    Class.Public()
+], Template.prototype, "checked", null);
+__decorate([
+    Class.Public()
+], Template.prototype, "defaultValue", null);
+__decorate([
+    Class.Public()
+], Template.prototype, "defaultChecked", null);
+__decorate([
+    Class.Public()
+], Template.prototype, "required", null);
+__decorate([
+    Class.Public()
+], Template.prototype, "readOnly", null);
+__decorate([
+    Class.Public()
+], Template.prototype, "disabled", null);
+__decorate([
+    Class.Public()
+], Template.prototype, "checkedValue", null);
+__decorate([
+    Class.Public()
+], Template.prototype, "uncheckedValue", null);
+__decorate([
+    Class.Public()
+], Template.prototype, "element", null);
+__decorate([
+    Class.Public()
+], Template.prototype, "reset", null);
+__decorate([
+    Class.Private()
+], Template, "groups", void 0);
+__decorate([
+    Class.Private()
+], Template, "notifyChanges", null);
+Template = Template_1 = __decorate([
+    Class.Describe()
+], Template);
+exports.Template = Template;
+
+}},
 "@singleware/oss/index":{pack:false, invoke:function(exports, require){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -3849,521 +4845,6 @@ Stylesheet = Stylesheet_1 = __decorate([
 ], Stylesheet);
 exports.Stylesheet = Stylesheet;
 
-}},
-"@singleware/ui-control/component":{pack:false, invoke:function(exports, require){
-"use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Copyright (C) 2018 Silas B. Domingos
- * This source code is licensed under the MIT License as described in the file LICENSE.
- */
-const Class = require("@singleware/class");
-/**
- * Component class.
- */
-let Component = class Component extends Class.Null {
-    /**
-     * Default constructor.
-     * @param properties Initial properties.
-     * @param children Initial children.
-     */
-    constructor(properties, children) {
-        super();
-        this.properties = Object.freeze(properties || {});
-        this.children = Object.freeze(children || []);
-    }
-    /**
-     * Gets the property descriptor that corresponds to the specified property name and prototype source.
-     * @param prototype Prototype source.
-     * @param property Property name.
-     * @returns Returns the corresponding property descriptor or undefined when the property was not found.
-     */
-    getPropertyDescriptor(prototype, property) {
-        let descriptor;
-        while (!(descriptor = Object.getOwnPropertyDescriptor(prototype, property))) {
-            if (!(prototype = Reflect.getPrototypeOf(prototype))) {
-                break;
-            }
-        }
-        return descriptor;
-    }
-    /**
-     * Binds the property descriptor from the specified prototype to be called with this instance context.
-     * @param prototype Source prototype.
-     * @param property Property name.
-     * @returns Returns a new property descriptor.
-     * @throws Throws an error when the specified property was not found.
-     */
-    bindDescriptor(prototype, property) {
-        const descriptor = this.getPropertyDescriptor(prototype, property);
-        if (!descriptor) {
-            throw new Error(`Property '${property}' was not found.`);
-        }
-        const newer = { ...descriptor };
-        if (newer.value) {
-            newer.value = newer.value.bind(this);
-        }
-        else {
-            if (newer.get) {
-                newer.get = newer.get.bind(this);
-            }
-            if (newer.set) {
-                newer.set = newer.set.bind(this);
-            }
-        }
-        return newer;
-    }
-    /**
-     * Bind all specified properties from this instance into the target object.
-     * @param target Target object.
-     * @param properties Properties to be assigned.
-     */
-    bindComponentProperties(target, properties) {
-        const prototype = Reflect.getPrototypeOf(this);
-        for (const property of properties) {
-            Reflect.defineProperty(target, property, this.bindDescriptor(prototype, property));
-        }
-    }
-    /**
-     * Assign all mapped values by the specified properties into this instance.
-     * @param values Values to be assigned.
-     * @param properties Properties to be assigned.
-     * @throws Throws an error when some specified property does not exists in this instance.
-     */
-    assignComponentProperties(values, properties) {
-        for (const property of properties) {
-            if (property in values) {
-                if (!(property in this)) {
-                    throw new Error(`Property '${property}' can't be assigned.`);
-                }
-                this[property] = values[property];
-            }
-        }
-    }
-    /**
-     * Gets the component instance.
-     * @throws Always throw an exception when not implemented.
-     */
-    get element() {
-        throw new Error(`Component not implemented.`);
-    }
-};
-__decorate([
-    Class.Protected()
-], Component.prototype, "properties", void 0);
-__decorate([
-    Class.Protected()
-], Component.prototype, "children", void 0);
-__decorate([
-    Class.Private()
-], Component.prototype, "getPropertyDescriptor", null);
-__decorate([
-    Class.Private()
-], Component.prototype, "bindDescriptor", null);
-__decorate([
-    Class.Protected()
-], Component.prototype, "bindComponentProperties", null);
-__decorate([
-    Class.Protected()
-], Component.prototype, "assignComponentProperties", null);
-__decorate([
-    Class.Public()
-], Component.prototype, "element", null);
-Component = __decorate([
-    Class.Describe()
-], Component);
-exports.Component = Component;
-
-}},
-"@singleware/ui-control/element":{pack:false, invoke:function(exports, require){
-"use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Copyright (C) 2018 Silas B. Domingos
- * This source code is licensed under the MIT License as described in the file LICENSE.
- */
-const Class = require("@singleware/class");
-/**
- * Element class.
- */
-let Element = class Element extends HTMLElement {
-    /**
-     * Gets the first child element in the specified slot element.
-     * @param slot Slot element.
-     * @param required Determines whether the child is required or not.
-     * @throws Throws an error when there are no children in the specified slot and the child is required.
-     * @returns Returns the first child element or undefined when the child was not found.
-     */
-    getChildElement(slot, required) {
-        const child = slot.assignedNodes()[0];
-        if (!child && required) {
-            throw new Error(`There are no children in the '${slot.name}' slot.`);
-        }
-        return child;
-    }
-    /**
-     * Gets the first child element in the specified slot element.
-     * @param slot Slot element.
-     * @throws Throws an error when there are no children in the specified slo.
-     * @returns Returns the first child element.
-     */
-    getRequiredChildElement(slot) {
-        return this.getChildElement(slot, true);
-    }
-    /**
-     * Gets the specified property from the first child in the given slot element.
-     * @param slot Slot element.
-     * @param property Property name.
-     * @param required Determines whether the property is required or not.
-     * @throws Throws an error when there are no children in the specified slot and the property is required.
-     * @returns Returns the property value.
-     */
-    getChildProperty(slot, property, required) {
-        return this.getChildElement(slot, required)[property];
-    }
-    /**
-     * Gets the specified property from the first child in the given slot element.
-     * @param slot Slot element.
-     * @param property Property name.
-     * @throws Throws an error when there are no children in the specified slot.
-     * @returns Returns the property value.
-     */
-    getRequiredChildProperty(slot, property) {
-        return this.getChildProperty(slot, property, true);
-    }
-    /**
-     * Sets the specified property into the first child in the given slot element.
-     * @param slot Slot element.
-     * @param property Property name.
-     * @param value Property value.
-     * @param required Determines whether the child is required or not.
-     * @throws Throws an error when there are no children in the specified slot and the child is required.
-     * @returns Returns true when the specified property has been assigned, false otherwise.
-     */
-    setChildProperty(slot, property, value, required) {
-        const child = this.getChildElement(slot, required);
-        if (property in child) {
-            child[property] = value;
-            return true;
-        }
-        return false;
-    }
-    /**
-     * Sets the specified property into the first child in the given slot element.
-     * @param slot Slot element.
-     * @param property Property name.
-     * @param value Property value.
-     * @throws Throws an error when there are no children in the specified slot.
-     * @returns Returns true when the specified property has been assigned, false otherwise.
-     */
-    setRequiredChildProperty(slot, property, value) {
-        return this.setChildProperty(slot, property, value, true);
-    }
-    /**
-     * Calls the specified method from the first child in the given slot element.
-     * @param slot Slot element.
-     * @param method Method name.
-     * @param parameters Method parameters.
-     * @param required Determines whether the child is required or not.
-     * @throws Throws an error when there are no children in the specified slot and the child is required.
-     * @returns Returns the same value from the performed method.
-     */
-    callChildMethod(slot, method, parameters, required) {
-        const child = this.getChildElement(slot, required);
-        if (child[method] instanceof Function) {
-            return child[method](...parameters);
-        }
-        return void 0;
-    }
-    /**
-     * Calls the specified method from the first child in the given slot element.
-     * @param slot Slot element.
-     * @param method Method name.
-     * @param parameters Method parameters.
-     * @throws Throws an error when there are no children in the specified slot.
-     * @returns Returns the same value from the performed method.
-     */
-    callRequiredChildMethod(slot, method, parameters) {
-        return this.callChildMethod(slot, method, parameters, true);
-    }
-    /**
-     * Updates the specified property name with the given value in the element.
-     * @param property Property name.
-     * @param value Property value.
-     */
-    updatePropertyState(property, value) {
-        if (value) {
-            this.setAttribute(property, value === true ? '' : value);
-        }
-        else {
-            this.removeAttribute(property);
-        }
-    }
-    /**
-     * Update all element's children width the specified property name and value.
-     * @param property Property name.
-     * @param value Property value.
-     */
-    updateChildrenState(property, value) {
-        for (const child of this.children) {
-            if (property in child) {
-                child[property] = value;
-            }
-        }
-    }
-};
-__decorate([
-    Class.Protected()
-], Element.prototype, "getChildElement", null);
-__decorate([
-    Class.Protected()
-], Element.prototype, "getRequiredChildElement", null);
-__decorate([
-    Class.Protected()
-], Element.prototype, "getChildProperty", null);
-__decorate([
-    Class.Protected()
-], Element.prototype, "getRequiredChildProperty", null);
-__decorate([
-    Class.Protected()
-], Element.prototype, "setChildProperty", null);
-__decorate([
-    Class.Protected()
-], Element.prototype, "setRequiredChildProperty", null);
-__decorate([
-    Class.Protected()
-], Element.prototype, "callChildMethod", null);
-__decorate([
-    Class.Protected()
-], Element.prototype, "callRequiredChildMethod", null);
-__decorate([
-    Class.Protected()
-], Element.prototype, "updatePropertyState", null);
-__decorate([
-    Class.Protected()
-], Element.prototype, "updateChildrenState", null);
-Element = __decorate([
-    Class.Describe()
-], Element);
-exports.Element = Element;
-
-}},
-"@singleware/ui-control/helper":{pack:false, invoke:function(exports, require){
-"use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Copyright (C) 2018 Silas B. Domingos
- * This source code is licensed under the MIT License as described in the file LICENSE.
- */
-const Class = require("@singleware/class");
-/**
- * Control helper class.
- */
-let Helper = class Helper extends Class.Null {
-    /**
-     * List all children of the expected type in the provided element slot and performs the given callback for each child.
-     * @param slot Element slot.
-     * @param type Expected instance type.
-     * @param callback Callback to be performed.
-     * @returns Returns the same value returned by the callback or undefined if the callback has no returns.
-     */
-    static listChildrenByType(slot, type, callback) {
-        const children = slot.assignedNodes();
-        for (const child of children) {
-            if (child instanceof type) {
-                const result = callback(child);
-                if (result !== void 0) {
-                    return result;
-                }
-            }
-        }
-        return void 0;
-    }
-    /**
-     * List all children that contains the expected property in the provided element slot and performs the given callback for each child.
-     * @param slot Element slot.
-     * @param property Expected property.
-     * @param callback Callback to be executed for each child.
-     * @returns Returns the same value returned by the callback or undefined if the callback has no returns.
-     */
-    static listChildrenByProperty(slot, property, callback) {
-        return this.listChildrenByType(slot, HTMLElement, (child) => {
-            if (property in child) {
-                const result = callback(child);
-                if (result !== void 0) {
-                    return result;
-                }
-            }
-        });
-    }
-    /**
-     * Gets the first child of the expected type from the specified element slot.
-     * @param slot Element slot.
-     * @param type Expected instance type.
-     * @returns Returns the first child or undefined when there is no child found.
-     */
-    static getChildByType(slot, type) {
-        return this.listChildrenByType(slot, type, (child) => child);
-    }
-    /**
-     * Gets the first child that contains the expected property from the specified element slot.
-     * @param slot Element slot.
-     * @param property Expected property.
-     * @returns Returns the first child or undefined when there is no child found.
-     */
-    static getChildByProperty(slot, property) {
-        return this.listChildrenByProperty(slot, property, (child) => child);
-    }
-    /**
-     * Gets the property value from the first child that contains the expected property in the specified element slot.
-     * @param slot Element slot.
-     * @param property Expected property.
-     * @returns Returns the property value or undefined when there is no child found.
-     */
-    static getChildProperty(slot, property) {
-        const child = this.getChildByProperty(slot, property);
-        return child ? child[property] : void 0;
-    }
-    /**
-     * Sets the specified property value to all elements in the specified element slot.
-     * @param slot Element slot.
-     * @param property Expected property.
-     * @param value New property value.
-     */
-    static setChildrenProperty(slot, property, value) {
-        this.listChildrenByProperty(slot, property, (child) => {
-            child[property] = value;
-        });
-    }
-    /**
-     * Sets the property value into the first child that contains the expected property in the specified element slot.
-     * @param slot Element slot.
-     * @param property Expected property.
-     * @param value New property value.
-     * @returns Returns true when the child was found and updated, false otherwise.
-     */
-    static setChildProperty(slot, property, value) {
-        const child = this.getChildByProperty(slot, property);
-        if (child) {
-            child[property] = value;
-            return true;
-        }
-        return false;
-    }
-};
-__decorate([
-    Class.Public()
-], Helper, "listChildrenByType", null);
-__decorate([
-    Class.Public()
-], Helper, "listChildrenByProperty", null);
-__decorate([
-    Class.Public()
-], Helper, "getChildByType", null);
-__decorate([
-    Class.Public()
-], Helper, "getChildByProperty", null);
-__decorate([
-    Class.Public()
-], Helper, "getChildProperty", null);
-__decorate([
-    Class.Public()
-], Helper, "setChildrenProperty", null);
-__decorate([
-    Class.Public()
-], Helper, "setChildProperty", null);
-Helper = __decorate([
-    Class.Describe()
-], Helper);
-exports.Helper = Helper;
-
-}},
-"@singleware/ui-control/index":{pack:false, invoke:function(exports, require){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Copyright (C) 2018 Silas B. Domingos
- * This source code is licensed under the MIT License as described in the file LICENSE.
- */
-var element_1 = require("./element");
-exports.Element = element_1.Element;
-var component_1 = require("./component");
-exports.Component = component_1.Component;
-const helper_1 = require("./helper");
-/**
- * List all children of the expected type in the provided element slot and performs the given callback for each child.
- * @param slot Element slot.
- * @param type Expected instance type.
- * @param callback Callback to be performed.
- * @returns Returns the same value returned by the callback or undefined if the callback has no returns.
- */
-exports.listChildrenByType = (slot, type, callback) => helper_1.Helper.listChildrenByType(slot, type, callback);
-/**
- * List all children that contains the expected property in the provided element slot and performs the given callback for each child.
- * @param slot Element slot.
- * @param property Expected property.
- * @param callback Callback to be executed for each child.
- * @returns Returns the same value returned by the callback or undefined if the callback has no returns.
- */
-exports.listChildrenByProperty = (slot, property, callback) => helper_1.Helper.listChildrenByProperty(slot, property, callback);
-/**
- * Gets the first child of the expected type from the specified element slot.
- * @param slot Element slot.
- * @param type Expected instance type.
- * @returns Returns the first child or undefined when there is no child found.
- */
-exports.getChildByType = (slot, type) => helper_1.Helper.getChildByType(slot, type);
-/**
- * Gets the first child that contains the expected property from the specified element slot.
- * @param slot Element slot.
- * @param property Expected property.
- * @returns Returns the first child or undefined when there is no child found.
- */
-exports.getChildByProperty = (slot, property) => helper_1.Helper.getChildByProperty(slot, property);
-/**
- * Gets the property value from the first child that contains the expected property in the specified element slot.
- * @param slot Element slot.
- * @param property Expected property.
- * @returns Returns the property value or undefined when there is no child found.
- */
-exports.getChildProperty = (slot, property) => helper_1.Helper.getChildProperty(slot, property);
-/**
- * Sets the specified property value to all elements in the specified element slot.
- * @param slot Element slot.
- * @param property Expected property.
- * @param value New property value.
- */
-exports.setChildrenProperty = (slot, property, value) => helper_1.Helper.setChildrenProperty(slot, property, value);
-/**
- * Sets the property value into the first child that contains the expected property in the specified element slot.
- * @param slot Element slot.
- * @param property Expected property.
- * @param value New property value.
- * @returns Returns true when the child was found and updated, false otherwise.
- */
-exports.setChildProperty = (slot, property, value) => helper_1.Helper.setChildProperty(slot, property, value);
-
-}},
-"@singleware/ui-control":{pack:true, invoke:function(exports, require){
-Object.assign(exports, require('index'));
 }},
 "@singleware/ui-select/component":{pack:false, invoke:function(exports, require){
 "use strict";
@@ -8402,7 +8883,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Class = require("@singleware/class");
 const JSX = require("@singleware/jsx");
 const Control = require("@singleware/ui-control");
+const Switch = require("@singleware/ui-switch");
+const Select = require("@singleware/ui-select");
 const Fieldset = require("@singleware/ui-fieldset");
+const Field = require("@singleware/ui-field");
 const Form = require("@singleware/ui-form");
 const Test = require("@module/index");
 /**
@@ -8418,16 +8902,42 @@ let View = class View extends Control.Component {
         /**
          * Test content.
          */
-        this.content = (JSX.create(Test.Component, { concealable: true, open: true },
+        this.content = (JSX.create(Test.Component, { class: "test", concealable: true, open: true, onHide: this.onHide.bind(this) },
             JSX.create("span", { slot: "icon" }, "\uD83D\uDC4B"),
             JSX.create("span", { slot: "hide" }),
             JSX.create("span", { slot: "message" }, "This is an alert example")));
+        /**
+         * Conceal switch element.
+         */
+        this.concealSwitch = (JSX.create(Switch.Template, { slot: "center", name: "concealable", checkedValue: true, uncheckedValue: false, value: true },
+            JSX.create("span", { slot: "yes" }, "Yes"),
+            JSX.create("span", { slot: "no" }, "No")));
+        /**
+         * Open switch element.
+         */
+        this.openSwitch = (JSX.create(Switch.Template, { slot: "center", name: "open", checkedValue: true, uncheckedValue: false, value: true },
+            JSX.create("span", { slot: "yes" }, "Yes"),
+            JSX.create("span", { slot: "no" }, "No")));
         /**
          * Test control.
          */
         this.control = (JSX.create(Form.Component, { onSubmit: this.onSubmit.bind(this) },
             JSX.create(Fieldset.Component, { slot: "header" },
                 JSX.create("h2", null, "Controls")),
+            JSX.create(Field.Component, { slot: "content" },
+                JSX.create("label", { slot: "label" }, "Icon"),
+                JSX.create(Select.Component, { slot: "center", name: "icon", options: ['😍', '😋', '👋'] },
+                    JSX.create("button", { slot: "input" }),
+                    JSX.create("div", { slot: "result" }))),
+            JSX.create(Field.Component, { slot: "content" },
+                JSX.create("label", { slot: "label" }, "Message"),
+                JSX.create("input", { slot: "center", name: "message", value: "This is a new alert message" })),
+            JSX.create(Field.Component, { slot: "content" },
+                JSX.create("label", { slot: "label" }, "Concealable"),
+                this.concealSwitch),
+            JSX.create(Field.Component, { slot: "content" },
+                JSX.create("label", { slot: "label" }, "Open"),
+                this.openSwitch),
             JSX.create(Fieldset.Component, { slot: "footer" },
                 JSX.create("button", { type: "submit", class: "button" }, "Apply"))));
         /**
@@ -8438,10 +8948,20 @@ let View = class View extends Control.Component {
             JSX.create("div", { class: "control" }, this.control)));
     }
     /**
+     * Hide, event handler.
+     */
+    onHide() {
+        this.openSwitch.value = false;
+    }
+    /**
      * Submit, event handler.
      */
     onSubmit() {
         const options = this.control.value;
+        this.content.open = options.open;
+        this.content.concealable = options.concealable;
+        this.content.message = options.message;
+        this.content.icon = options.icon;
     }
     /**
      * View element.
@@ -8455,10 +8975,19 @@ __decorate([
 ], View.prototype, "content", void 0);
 __decorate([
     Class.Private()
+], View.prototype, "concealSwitch", void 0);
+__decorate([
+    Class.Private()
+], View.prototype, "openSwitch", void 0);
+__decorate([
+    Class.Private()
 ], View.prototype, "control", void 0);
 __decorate([
     Class.Private()
 ], View.prototype, "skeleton", void 0);
+__decorate([
+    Class.Private()
+], View.prototype, "onHide", null);
 __decorate([
     Class.Private()
 ], View.prototype, "onSubmit", null);
