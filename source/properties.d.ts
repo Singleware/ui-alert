@@ -1,4 +1,4 @@
-/**
+/*!
  * Copyright (C) 2018 Silas B. Domingos
  * This source code is licensed under the MIT License as described in the file LICENSE.
  */
@@ -16,13 +16,21 @@ export interface Properties {
    */
   slot?: string;
   /**
+   * Alert icon.
+   */
+  icon?: string;
+  /**
    * Alert message.
    */
   message?: string;
   /**
-   * Determines whether the alert starts opened or not.
+   * Determines whether the alert can be concealed or not.
    */
-  opened?: boolean;
+  concealable?: boolean;
+  /**
+   * Determines whether the alert starts open or not.
+   */
+  open?: boolean;
   /**
    * Alert children.
    */

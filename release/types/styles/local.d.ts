@@ -1,8 +1,8 @@
 import * as OSS from '@singleware/oss';
 /**
- * Alert stylesheet class.
+ * Local alert stylesheet class.
  */
-export declare class Stylesheet extends OSS.Stylesheet {
+export declare class Local extends OSS.Stylesheet {
     /**
      * Alert styles.
      */
@@ -12,6 +12,14 @@ export declare class Stylesheet extends OSS.Stylesheet {
      */
     private icons;
     /**
+     * Conceal hide slot styles.
+     */
+    private concealHideSlot;
+    /**
+     * Slotted icon styles.
+     */
+    private slottedIcon;
+    /**
      * Slotted message styles.
      */
     private slottedMessage;
@@ -20,21 +28,17 @@ export declare class Stylesheet extends OSS.Stylesheet {
      */
     private slottedHide;
     /**
-     * Slotted hide cross styles.
+     * Slotted hide, cross styles.
      */
     private slottedHideCross;
     /**
-     * Slotted hide cross before styles.
+     * Slotted hide, cross before styles.
      */
     private slottedHideCrossBefore;
     /**
-     * Slotted hide cross after styles.
+     * Slotted hide, cross after styles.
      */
     private slottedHideCrossAfter;
-    /**
-     * Hidden styles.
-     */
-    private hidden;
     /**
      * Default constructor.
      */

@@ -1,3 +1,4 @@
+import * as JSX from '@singleware/jsx';
 import * as Control from '@singleware/ui-control';
 import { Properties } from './properties';
 import { Element } from './element';
@@ -20,16 +21,33 @@ export declare class Component<T extends Properties = Properties> extends Contro
      */
     readonly element: Element;
     /**
+     * Gets the alert icon.
+     */
+    /**
+    * Sets the alert icon.
+    */
+    icon: JSX.Element | undefined;
+    /**
      * Gets the alert message.
      */
     /**
     * Sets the alert message.
     */
-    message: any;
+    message: JSX.Element | undefined;
     /**
-     * Gets the opened status.
+     * Gets the concealable status.
      */
-    readonly opened: boolean;
+    /**
+    * Sets the concealable status.
+    */
+    concealable: boolean;
+    /**
+     * Gets the open status.
+     */
+    /**
+    * Sets the open status.
+    */
+    open: boolean;
     /**
      * Shows the alert.
      */

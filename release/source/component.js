@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
+/*!
  * Copyright (C) 2018 Silas B. Domingos
  * This source code is licensed under the MIT License as described in the file LICENSE.
  */
@@ -27,12 +27,9 @@ let Component = class Component extends Control.Component {
         /**
          * Element instance.
          */
-        this.skeleton = (JSX.create("swe-alert", { class: this.properties.class, slot: this.properties.slot, message: this.properties.message }, this.children));
+        this.skeleton = (JSX.create("swe-alert", { class: this.properties.class, slot: this.properties.slot, icon: this.properties.icon, message: this.properties.message, concealable: this.properties.concealable, open: this.properties.open }, this.children));
         if (this.properties.onHide) {
             this.skeleton.addEventListener('hide', this.properties.onHide);
-        }
-        if (this.properties.opened) {
-            this.skeleton.show();
         }
     }
     /**
@@ -40,6 +37,18 @@ let Component = class Component extends Control.Component {
      */
     get element() {
         return this.skeleton;
+    }
+    /**
+     * Gets the alert icon.
+     */
+    get icon() {
+        return this.skeleton.icon;
+    }
+    /**
+     * Sets the alert icon.
+     */
+    set icon(icon) {
+        this.skeleton.icon = icon;
     }
     /**
      * Gets the alert message.
@@ -54,10 +63,28 @@ let Component = class Component extends Control.Component {
         this.skeleton.message = message;
     }
     /**
-     * Gets the opened status.
+     * Gets the concealable status.
      */
-    get opened() {
-        return this.skeleton.opened;
+    get concealable() {
+        return this.skeleton.concealable;
+    }
+    /**
+     * Sets the concealable status.
+     */
+    set concealable(state) {
+        this.skeleton.concealable = state;
+    }
+    /**
+     * Gets the open status.
+     */
+    get open() {
+        return this.skeleton.open;
+    }
+    /**
+     * Sets the open status.
+     */
+    set open(state) {
+        this.skeleton.open = state;
     }
     /**
      * Shows the alert.
@@ -80,10 +107,16 @@ __decorate([
 ], Component.prototype, "element", null);
 __decorate([
     Class.Public()
+], Component.prototype, "icon", null);
+__decorate([
+    Class.Public()
 ], Component.prototype, "message", null);
 __decorate([
     Class.Public()
-], Component.prototype, "opened", null);
+], Component.prototype, "concealable", null);
+__decorate([
+    Class.Public()
+], Component.prototype, "open", null);
 __decorate([
     Class.Public()
 ], Component.prototype, "show", null);

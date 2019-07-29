@@ -1,12 +1,21 @@
 import * as Control from '@singleware/ui-control';
+import * as JSX from '@singleware/jsx';
 /**
  * Alert element.
  */
 export declare class Element extends Control.Element {
     /**
+     * Global element styles.
+     */
+    private static globalStyles;
+    /**
      * Element styles.
      */
     private styles;
+    /**
+     * Current icon content.
+     */
+    private currentIcon;
     /**
      * Current message content.
      */
@@ -40,16 +49,33 @@ export declare class Element extends Control.Element {
      */
     constructor();
     /**
+     * Gets the alert icon.
+     */
+    /**
+    * Sets the alert icon.
+    */
+    icon: JSX.Element | undefined;
+    /**
      * Gets the alert message.
      */
     /**
     * Sets the alert message.
     */
-    message: any;
+    message: JSX.Element | undefined;
     /**
-     * Gets the opened status.
+     * Gets the concealable status.
      */
-    readonly opened: boolean;
+    /**
+    * Sets the concealable status.
+    */
+    concealable: boolean;
+    /**
+     * Gets the open status.
+     */
+    /**
+    * Sets the open status.
+    */
+    open: boolean;
     /**
      * Shows the alert.
      */

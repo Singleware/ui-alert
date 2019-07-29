@@ -1,4 +1,4 @@
-/**
+/*!
  * Copyright (C) 2018 Silas B. Domingos
  * This source code is licensed under the MIT License as described in the file LICENSE.
  */
@@ -19,7 +19,14 @@ export class Component<T extends Properties = Properties> extends Control.Compon
    */
   @Class.Private()
   private skeleton = (
-    <swe-alert class={this.properties.class} slot={this.properties.slot} message={this.properties.message}>
+    <swe-alert
+      class={this.properties.class}
+      slot={this.properties.slot}
+      icon={this.properties.icon}
+      message={this.properties.message}
+      concealable={this.properties.concealable}
+      open={this.properties.open}
+    >
       {this.children}
     </swe-alert>
   ) as Element;
@@ -34,9 +41,6 @@ export class Component<T extends Properties = Properties> extends Control.Compon
     if (this.properties.onHide) {
       this.skeleton.addEventListener('hide', this.properties.onHide);
     }
-    if (this.properties.opened) {
-      this.skeleton.show();
-    }
   }
 
   /**
@@ -48,26 +52,63 @@ export class Component<T extends Properties = Properties> extends Control.Compon
   }
 
   /**
+   * Gets the alert icon.
+   */
+  @Class.Public()
+  public get icon(): JSX.Element | undefined {
+    return this.skeleton.icon;
+  }
+
+  /**
+   * Sets the alert icon.
+   */
+  public set icon(icon: JSX.Element | undefined) {
+    this.skeleton.icon = icon;
+  }
+
+  /**
    * Gets the alert message.
    */
   @Class.Public()
-  public get message(): any {
+  public get message(): JSX.Element | undefined {
     return this.skeleton.message;
   }
 
   /**
    * Sets the alert message.
    */
-  public set message(message: any) {
+  public set message(message: JSX.Element | undefined) {
     this.skeleton.message = message;
   }
 
   /**
-   * Gets the opened status.
+   * Gets the concealable status.
    */
   @Class.Public()
-  public get opened(): boolean {
-    return this.skeleton.opened;
+  public get concealable(): boolean {
+    return this.skeleton.concealable;
+  }
+
+  /**
+   * Sets the concealable status.
+   */
+  public set concealable(state: boolean) {
+    this.skeleton.concealable = state;
+  }
+
+  /**
+   * Gets the open status.
+   */
+  @Class.Public()
+  public get open(): boolean {
+    return this.skeleton.open;
+  }
+
+  /**
+   * Sets the open status.
+   */
+  public set open(state: boolean) {
+    this.skeleton.open = state;
   }
 
   /**
