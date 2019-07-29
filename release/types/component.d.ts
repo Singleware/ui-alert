@@ -11,6 +11,10 @@ export declare class Component<T extends Properties = Properties> extends Contro
      */
     private skeleton;
     /**
+     * Initializes the component.
+     */
+    private initialize;
+    /**
      * Default constructor.
      * @param properties Initial properties.
      * @param children Initial children.

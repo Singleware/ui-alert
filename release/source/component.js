@@ -28,6 +28,12 @@ let Component = class Component extends Control.Component {
          * Element instance.
          */
         this.skeleton = (JSX.create("swe-alert", { class: this.properties.class, slot: this.properties.slot, icon: this.properties.icon, message: this.properties.message, concealable: this.properties.concealable, open: this.properties.open }, this.children));
+        this.initialize();
+    }
+    /**
+     * Initializes the component.
+     */
+    initialize() {
         if (this.properties.onHide) {
             this.skeleton.addEventListener('hide', this.properties.onHide);
         }
@@ -102,6 +108,9 @@ let Component = class Component extends Control.Component {
 __decorate([
     Class.Private()
 ], Component.prototype, "skeleton", void 0);
+__decorate([
+    Class.Private()
+], Component.prototype, "initialize", null);
 __decorate([
     Class.Public()
 ], Component.prototype, "element", null);

@@ -24,21 +24,25 @@ export declare class Local extends OSS.Stylesheet {
      */
     private slottedMessage;
     /**
-     * Slotted hide styles.
+     * Slotted empty hide styles.
      */
     private slottedHide;
     /**
+     * Slotted empty hide styles.
+     */
+    private slottedEmptyHide;
+    /**
      * Slotted hide, cross styles.
      */
-    private slottedHideCross;
+    private slottedEmptyHideCross;
     /**
      * Slotted hide, cross before styles.
      */
-    private slottedHideCrossBefore;
+    private slottedEmptyHideCrossBefore;
     /**
      * Slotted hide, cross after styles.
      */
-    private slottedHideCrossAfter;
+    private slottedEmptyHideCrossAfter;
     /**
      * Default constructor.
      */

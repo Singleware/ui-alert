@@ -20,21 +20,6 @@ const component = (
 ) as Alert.Element;
 ```
 
-Instantiate the custom element directly.
-
-```tsx
-import * as JSX from '@singleware/jsx';
-import * as Alert from '@singleware/ui-alert';
-
-const element = (
-  <swe-alert concealable open>
-    <span slot="icon">👋</span>
-    <span slot="message">This is an alert example initialized by the custom element directly.</span>
-    <span slot="hide" />
-  </swe-alert>
-) as Alert.Element;
-```
-
 Show and Hide programmatically.
 
 ```tsx
@@ -42,15 +27,11 @@ component.show();
 component.hide();
 ```
 
-> Allowed to component and element instances.
-
 Be informed about the hide action.
 
 ```tsx
 component.addEventListener('hide', (event: Event) => console.log(`Yes! It's hidden now.`));
 ```
-
-> Allowed to component and element instances.
 
 ## Help
 

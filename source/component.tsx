@@ -32,15 +32,23 @@ export class Component<T extends Properties = Properties> extends Control.Compon
   ) as Element;
 
   /**
+   * Initializes the component.
+   */
+  @Class.Private()
+  private initialize(): void {
+    if (this.properties.onHide) {
+      this.skeleton.addEventListener('hide', this.properties.onHide);
+    }
+  }
+
+  /**
    * Default constructor.
    * @param properties Initial properties.
    * @param children Initial children.
    */
   constructor(properties?: T, children?: any[]) {
     super(properties, children);
-    if (this.properties.onHide) {
-      this.skeleton.addEventListener('hide', this.properties.onHide);
-    }
+    this.initialize();
   }
 
   /**

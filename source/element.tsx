@@ -86,14 +86,22 @@ export class Element extends Control.Element {
   }
 
   /**
+   * Initializes all global settings.
+   */
+  @Class.Private()
+  private static globalInitialization(): void {
+    if (!globalThis.document.head.contains(Element.globalStyles)) {
+      JSX.append(globalThis.document.head, Element.globalStyles);
+    }
+  }
+
+  /**
    * Default constructor.
    */
   constructor() {
     super();
+    Element.globalInitialization();
     JSX.append(this.attachShadow({ mode: 'closed' }), this.alertStyles, this.alertLayout);
-    if (!globalThis.document.head.contains(Element.globalStyles)) {
-      JSX.append(globalThis.document.head, Element.globalStyles);
-    }
   }
 
   /**

@@ -45,6 +45,10 @@ export declare class Element extends Control.Element {
      */
     private hideHandler;
     /**
+     * Initializes all global settings.
+     */
+    private static globalInitialization;
+    /**
      * Default constructor.
      */
     constructor();

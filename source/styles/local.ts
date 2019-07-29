@@ -41,28 +41,37 @@ export class Local extends OSS.Stylesheet {
   private slottedMessage = this.select(':host slot[name="message"]::slotted(*)');
 
   /**
-   * Slotted hide styles.
+   * Slotted empty hide styles.
    */
   @Class.Private()
   private slottedHide = this.select(':host slot[name="hide"]::slotted(*)');
 
   /**
+   * Slotted empty hide styles.
+   */
+  @Class.Private()
+  private slottedEmptyHide = this.select(':host slot[name="hide"]::slotted(*:empty)');
+
+  /**
    * Slotted hide, cross styles.
    */
   @Class.Private()
-  private slottedHideCross = this.select(':host slot[name="hide"]::slotted(*)::before', ':host slot[name="hide"]::slotted(*)::after');
+  private slottedEmptyHideCross = this.select(
+    ':host slot[name="hide"]::slotted(*:empty)::before',
+    ':host slot[name="hide"]::slotted(*:empty)::after'
+  );
 
   /**
    * Slotted hide, cross before styles.
    */
   @Class.Private()
-  private slottedHideCrossBefore = this.select(':host slot[name="hide"]::slotted(*)::before');
+  private slottedEmptyHideCrossBefore = this.select(':host slot[name="hide"]::slotted(*:empty)::before');
 
   /**
    * Slotted hide, cross after styles.
    */
   @Class.Private()
-  private slottedHideCrossAfter = this.select(':host slot[name="hide"]::slotted(*)::after');
+  private slottedEmptyHideCrossAfter = this.select(':host slot[name="hide"]::slotted(*:empty)::after');
 
   /**
    * Default constructor.
@@ -88,22 +97,22 @@ export class Local extends OSS.Stylesheet {
     this.slottedMessage.marginRight = 'var(--swe-alert-message-margin-right, var(--swe-alert-message-margin, .5rem))';
     this.slottedMessage.marginBottom = 'var(--swe-alert-message-margin-bottom, var(--swe-alert-message-margin, .5rem))';
     this.slottedMessage.marginLeft = 'var(--swe-alert-message-margin-left, var(--swe-alert-message-margin, .5rem))';
-    this.slottedHide.position = 'relative';
+    this.slottedHide.cursor = 'pointer';
     this.slottedHide.marginTop = 'var(--swe-alert-hide-margin-top, var(--swe-alert-hide-margin, .5rem))';
     this.slottedHide.marginRight = 'var(--swe-alert-hide-margin-right, var(--swe-alert-hide-margin, .5rem))';
     this.slottedHide.marginBottom = 'var(--swe-alert-hide-margin-bottom, var(--swe-alert-hide-margin, .5rem))';
     this.slottedHide.marginLeft = 'var(--swe-alert-hide-margin-left, var(--swe-alert-hide-margin, 0rem))';
-    this.slottedHide.width = '1rem';
-    this.slottedHide.height = '1rem';
-    this.slottedHide.cursor = 'pointer';
-    this.slottedHideCross.content = "''";
-    this.slottedHideCross.position = 'absolute';
-    this.slottedHideCross.backgroundColor = 'var(--swe-alert-hide-cross-color, var(--swe-text-color, hsl(0, 0%, 20%)))';
-    this.slottedHideCross.width = 'var(--swe-alert-hide-cross-size, var(--swe-border-size, .0625rem))';
-    this.slottedHideCross.height = '50%';
-    this.slottedHideCross.left = '50%';
-    this.slottedHideCross.top = '25%';
-    this.slottedHideCrossBefore.transform = 'rotate(45deg)';
-    this.slottedHideCrossAfter.transform = 'rotate(-45deg)';
+    this.slottedEmptyHide.position = 'relative';
+    this.slottedEmptyHide.width = '1rem';
+    this.slottedEmptyHide.height = '1rem';
+    this.slottedEmptyHideCross.content = "''";
+    this.slottedEmptyHideCross.position = 'absolute';
+    this.slottedEmptyHideCross.backgroundColor = 'var(--swe-alert-hide-cross-color, var(--swe-text-color, hsl(0, 0%, 20%)))';
+    this.slottedEmptyHideCross.width = 'var(--swe-alert-hide-cross-size, var(--swe-border-size, .0625rem))';
+    this.slottedEmptyHideCross.height = '50%';
+    this.slottedEmptyHideCross.left = '50%';
+    this.slottedEmptyHideCross.top = '25%';
+    this.slottedEmptyHideCrossBefore.transform = 'rotate(45deg)';
+    this.slottedEmptyHideCrossAfter.transform = 'rotate(-45deg)';
   }
 }

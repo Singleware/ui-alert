@@ -52,10 +52,8 @@ let Element = Element_1 = class Element extends Control.Element {
          * Alert styles.
          */
         this.alertStyles = JSX.create("style", { type: "text/css" }, this.styles.toString());
+        Element_1.globalInitialization();
         JSX.append(this.attachShadow({ mode: 'closed' }), this.alertStyles, this.alertLayout);
-        if (!globalThis.document.head.contains(Element_1.globalStyles)) {
-            JSX.append(globalThis.document.head, Element_1.globalStyles);
-        }
     }
     /**
      * Hide button, click handler.
@@ -64,6 +62,14 @@ let Element = Element_1 = class Element extends Control.Element {
         const event = new Event('hide', { bubbles: true, cancelable: false });
         if (this.dispatchEvent(event)) {
             this.hide();
+        }
+    }
+    /**
+     * Initializes all global settings.
+     */
+    static globalInitialization() {
+        if (!globalThis.document.head.contains(Element_1.globalStyles)) {
+            JSX.append(globalThis.document.head, Element_1.globalStyles);
         }
     }
     /**
@@ -179,6 +185,9 @@ __decorate([
 __decorate([
     Class.Private()
 ], Element, "globalStyles", void 0);
+__decorate([
+    Class.Private()
+], Element, "globalInitialization", null);
 Element = Element_1 = __decorate([
     JSX.Describe('swe-alert'),
     Class.Describe()

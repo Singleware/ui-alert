@@ -37,15 +37,9 @@ let View = class View extends Control.Component {
             JSX.create("span", { slot: "hide" }),
             JSX.create("span", { slot: "message" }, "This is an alert example")));
         /**
-         * Conceal switch element.
-         */
-        this.concealSwitch = (JSX.create(Switch.Template, { slot: "center", name: "concealable", checkedValue: true, uncheckedValue: false, value: true },
-            JSX.create("span", { slot: "yes" }, "Yes"),
-            JSX.create("span", { slot: "no" }, "No")));
-        /**
          * Open switch element.
          */
-        this.openSwitch = (JSX.create(Switch.Template, { slot: "center", name: "open", checkedValue: true, uncheckedValue: false, value: true },
+        this.openSwitch = (JSX.create(Switch.Template, { slot: "center", name: "open", checkedValue: true, uncheckedValue: false, value: this.content.open },
             JSX.create("span", { slot: "yes" }, "Yes"),
             JSX.create("span", { slot: "no" }, "No")));
         /**
@@ -56,15 +50,17 @@ let View = class View extends Control.Component {
                 JSX.create("h2", null, "Controls")),
             JSX.create(Field.Component, { slot: "content" },
                 JSX.create("label", { slot: "label" }, "Icon"),
-                JSX.create(Select.Component, { slot: "center", name: "icon", options: ['😍', '😋', '👋'] },
+                JSX.create(Select.Component, { slot: "center", name: "icon", options: ['😍', '😋', '👋'], value: this.content.icon },
                     JSX.create("button", { slot: "input" }),
                     JSX.create("div", { slot: "result" }))),
             JSX.create(Field.Component, { slot: "content" },
                 JSX.create("label", { slot: "label" }, "Message"),
-                JSX.create("input", { slot: "center", name: "message", value: "This is a new alert message" })),
+                JSX.create("input", { slot: "center", name: "message", value: this.content.message })),
             JSX.create(Field.Component, { slot: "content" },
                 JSX.create("label", { slot: "label" }, "Concealable"),
-                this.concealSwitch),
+                JSX.create(Switch.Template, { slot: "center", name: "concealable", checkedValue: true, uncheckedValue: false, value: this.content.concealable },
+                    JSX.create("span", { slot: "yes" }, "Yes"),
+                    JSX.create("span", { slot: "no" }, "No"))),
             JSX.create(Field.Component, { slot: "content" },
                 JSX.create("label", { slot: "label" }, "Open"),
                 this.openSwitch),
@@ -103,9 +99,6 @@ let View = class View extends Control.Component {
 __decorate([
     Class.Private()
 ], View.prototype, "content", void 0);
-__decorate([
-    Class.Private()
-], View.prototype, "concealSwitch", void 0);
 __decorate([
     Class.Private()
 ], View.prototype, "openSwitch", void 0);

@@ -31,22 +31,11 @@ export class View extends Control.Component<Control.Properties> {
   ) as Test.Element;
 
   /**
-   * Conceal switch element.
-   */
-  @Class.Private()
-  private concealSwitch = (
-    <Switch.Template slot="center" name="concealable" checkedValue={true} uncheckedValue={false} value={true}>
-      <span slot="yes">Yes</span>
-      <span slot="no">No</span>
-    </Switch.Template>
-  ) as Switch.Element;
-
-  /**
    * Open switch element.
    */
   @Class.Private()
   private openSwitch = (
-    <Switch.Template slot="center" name="open" checkedValue={true} uncheckedValue={false} value={true}>
+    <Switch.Template slot="center" name="open" checkedValue={true} uncheckedValue={false} value={this.content.open}>
       <span slot="yes">Yes</span>
       <span slot="no">No</span>
     </Switch.Template>
@@ -63,18 +52,21 @@ export class View extends Control.Component<Control.Properties> {
       </Fieldset.Component>
       <Field.Component slot="content">
         <label slot="label">Icon</label>
-        <Select.Component slot="center" name="icon" options={['😍', '😋', '👋']}>
+        <Select.Component slot="center" name="icon" options={['😍', '😋', '👋']} value={this.content.icon as string}>
           <button slot="input"></button>
           <div slot="result" />
         </Select.Component>
       </Field.Component>
       <Field.Component slot="content">
         <label slot="label">Message</label>
-        <input slot="center" name="message" value="This is a new alert message" />
+        <input slot="center" name="message" value={this.content.message as string} />
       </Field.Component>
       <Field.Component slot="content">
         <label slot="label">Concealable</label>
-        {this.concealSwitch}
+        <Switch.Template slot="center" name="concealable" checkedValue={true} uncheckedValue={false} value={this.content.concealable}>
+          <span slot="yes">Yes</span>
+          <span slot="no">No</span>
+        </Switch.Template>
       </Field.Component>
       <Field.Component slot="content">
         <label slot="label">Open</label>
