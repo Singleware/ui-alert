@@ -17,8 +17,11 @@ export class Handler extends Class.Null {
    * @param match Matched route.
    */
   @Frontend.Processor({ path: '/' })
+  @Frontend.Processor({ path: '/ui-alert/' })
   @Class.Public()
   public async indexAction(match: Frontend.Match): Promise<void> {
-    match.detail.output.content = new View({});
+    const output = match.detail.output;
+    output.subtitle = 'User Interface: Alert';
+    output.content = new View({});
   }
 }

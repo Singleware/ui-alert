@@ -38,8 +38,7 @@ let Application = Application_1 = class Application extends Frontend.Main {
  */
 Application.title = {
     text: 'Singleware',
-    separator: ' - ',
-    prefix: true
+    separator: ' - '
 };
 __decorate([
     Class.Private()

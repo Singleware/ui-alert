@@ -18,8 +18,7 @@ class Application extends Frontend.Main {
   @Class.Private()
   private static title = <Frontend.Title>{
     text: 'Singleware',
-    separator: ' - ',
-    prefix: true
+    separator: ' - '
   };
 
   /**

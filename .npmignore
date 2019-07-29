@@ -6,3 +6,4 @@ release/**/*.tsbuildinfo
 release/tests/
 source/
 tests/
+docs/

@@ -8314,11 +8314,14 @@ let Handler = class Handler extends Class.Null {
      * @param match Matched route.
      */
     async indexAction(match) {
-        match.detail.output.content = new view_1.View({});
+        const output = match.detail.output;
+        output.subtitle = 'User Interface: Alert';
+        output.content = new view_1.View({});
     }
 };
 __decorate([
     Frontend.Processor({ path: '/' }),
+    Frontend.Processor({ path: '/ui-alert/' }),
     Class.Public()
 ], Handler.prototype, "indexAction", null);
 Handler = __decorate([
@@ -8368,8 +8371,7 @@ let Application = Application_1 = class Application extends Frontend.Main {
  */
 Application.title = {
     text: 'Singleware',
-    separator: ' - ',
-    prefix: true
+    separator: ' - '
 };
 __decorate([
     Class.Private()

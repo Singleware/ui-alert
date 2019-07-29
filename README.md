@@ -1,6 +1,7 @@
 # UI-Alert
 
-Custom HTML element used to wrap a simple alert element, composed by the slots: icon, message and hide.
+Custom HTML element used to wrap a simple alert, composed by the slots: icon, message and hide.
+[See demo](//singleware.github.io/ui-alert/)
 
 ## Usage
 
